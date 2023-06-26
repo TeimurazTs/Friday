@@ -10,9 +10,9 @@
     </p>
   </mat-card-content>
   <mat-card-actions>
-    <button>New</button>
-    <button>Progress</button>
-    <button>Done</button>
+    <button (click)="onRearrangeTask(task, 'new')">New</button>
+    <button (click)="onRearrangeTask(task, 'inProgress')">Progress</button>
+    <button (click)="onRearrangeTask(task, 'done')">Done</button>
     <button type="button" (click)="onDelete(task.id, task.status)">
       Delete
     </button>

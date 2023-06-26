@@ -32,13 +32,16 @@ export class CreateComponent {
       this.taskForm.value.description
     ) {
       this.http
-        .postTask({
-          title: this.taskForm.value.title,
-          subtitle: this.taskForm.value.title,
-          description: this.taskForm.value.description,
-          status: 'new',
-          id: '',
-        })
+        .postTask(
+          {
+            title: this.taskForm.value.title,
+            subtitle: this.taskForm.value.title,
+            description: this.taskForm.value.description,
+            status: 'new',
+            id: '',
+          },
+          'new'
+        )
         .subscribe(() => this.http.taskUpdate.next('new'));
     }
     this.taskForm.reset();

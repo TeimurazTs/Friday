@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable, map, of, switchMap, tap } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { TaskComponent } from 'src/app/shared/components/task/task.component';
 import { Task } from 'src/app/shared/models/task.model';
 import { HttpService } from 'src/app/shared/services/http.service';
@@ -31,12 +31,20 @@ export class DashboardComponent implements OnInit {
     this.doneTasks$ = this.http
       .fetchTasks('done')
       .pipe(map((response) => this.filterTasks(response, 'done')));
-    this.http.taskUpdate.subscribe(() => {
-      console.log('it came here');
-      this.newTasks$ = this.http.fetchTasks('new').pipe(
-        tap(() => console.log('inside pipe')),
-        map((response) => this.filterTasks(response, 'new'))
-      );
+    this.http.taskUpdate.subscribe((status) => {
+      if (status === 'new') {
+        this.newTasks$ = this.http
+          .fetchTasks(status)
+          .pipe(map((response) => this.filterTasks(response, status)));
+      } else if (status === 'inProgress') {
+        this.inProgressTasks$ = this.http
+          .fetchTasks(status)
+          .pipe(map((response) => this.filterTasks(response, status)));
+      } else if (status === 'done') {
+        this.doneTasks$ = this.http
+          .fetchTasks(status)
+          .pipe(map((response) => this.filterTasks(response, status)));
+      }
     });
   }
 

@@ -16,7 +16,10 @@ export class TaskComponent {
   @Input() task!: Task;
 
   onDelete(id: string, status: string) {
-    this.http.deleteTask(id, status).subscribe();
-    this.http.taskUpdate.next(status);
+    this.http.deleteTask(id, status);
+  }
+
+  onRearrangeTask(task: Task, newStatus: string) {
+    this.http.reArrangeTask(task, newStatus);
   }
 }

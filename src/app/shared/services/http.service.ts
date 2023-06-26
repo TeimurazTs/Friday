@@ -17,16 +17,27 @@ export class HttpService {
     );
   }
 
-  postTask(task: Task) {
+  postTask(task: Task, status: string) {
     return this.http.post<Task>(
-      'https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/new.json',
+      `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}.json`,
       task
     );
   }
 
   deleteTask(id: string, status: string) {
-    return this.http.delete(
-      `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}/${id}.json`
-    );
+    this.http
+      .delete(
+        `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}/${id}.json`
+      )
+      .subscribe(() => {
+        this.taskUpdate.next(status);
+      });
+  }
+
+  reArrangeTask(task: Task, newStatus: string) {
+    this.deleteTask(task.id, task.status);
+    this.postTask({ ...task, status: newStatus }, newStatus).subscribe(() => {
+      this.taskUpdate.next(newStatus);
+    });
   }
 }
