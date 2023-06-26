@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 
+
 @Component({
   standalone: true,
   imports: [DashboardComponent],

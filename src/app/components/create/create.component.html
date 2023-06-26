@@ -1,0 +1,22 @@
+<form [formGroup]="taskForm" (ngSubmit)="onSubmit()">
+  <div class="inpus-div">
+    <app-input
+      placeholder="Title"
+      [control]="this.taskForm.controls.title"
+    ></app-input>
+    <app-input
+      placeholder="Subtitle"
+      [control]="this.taskForm.controls.subtitle"
+    ></app-input>
+  </div>
+  <div class="textarea-wraper">
+    <textarea
+      [formControl]="taskForm.controls.description"
+      id="textarea"
+      cols="30"
+      rows="10"
+      placeholder="description"
+    ></textarea>
+  </div>
+  <button [disabled]="!taskForm.valid" type="submit">Save</button>
+</form>

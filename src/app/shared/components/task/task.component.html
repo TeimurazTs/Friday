@@ -1,1 +1,20 @@
-<p>task works!</p>
+<mat-card class="example-card">
+  <mat-card-header>
+    <div mat-card-avatar class="example-header-image"></div>
+    <mat-card-title>{{ task.title }}</mat-card-title>
+    <mat-card-subtitle>{{ task.subtitle }}</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      {{ task.description }}
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button>New</button>
+    <button>Progress</button>
+    <button>Done</button>
+    <button type="button" (click)="onDelete(task.id, task.status)">
+      Delete
+    </button>
+  </mat-card-actions>
+</mat-card>

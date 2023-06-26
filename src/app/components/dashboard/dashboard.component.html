@@ -1,0 +1,18 @@
+<div class="container">
+  <app-header></app-header>
+  <app-create></app-create>
+  <main>
+    <div>
+      <p>New Task</p>
+      <app-task *ngFor="let task of newTasks$ | async" [task]="task"></app-task>
+    </div>
+    <div>
+      <p>In Progress</p>
+      <app-task *ngFor="let task of inProgressTasks$ | async" [task]="task"></app-task>
+    </div>
+    <div>
+      <p>Done</p>
+      <app-task *ngFor="let task of doneTasks$ | async" [task]="task"></app-task>
+    </div>
+  </main>
+</div>
