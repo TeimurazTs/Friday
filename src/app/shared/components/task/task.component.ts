@@ -20,6 +20,9 @@ export class TaskComponent {
   }
 
   onRearrangeTask(task: Task, newStatus: string) {
+    if (task.status === newStatus) {
+      return;
+    }
     this.http.reArrangeTask(task, newStatus);
   }
 }

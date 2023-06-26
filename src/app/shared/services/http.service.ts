@@ -40,4 +40,11 @@ export class HttpService {
       this.taskUpdate.next(newStatus);
     });
   }
+
+  filterTasks(response: Object, taskType: string): Task[] {
+    return Object.entries(response).map(([key, value]) => {
+      const task = { ...value, id: key, taskType: taskType };
+      return task;
+    });
+  }
 }

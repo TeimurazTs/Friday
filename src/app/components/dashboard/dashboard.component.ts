@@ -22,36 +22,23 @@ export class DashboardComponent implements OnInit {
   constructor(private http: HttpService) {}
 
   ngOnInit(): void {
-    this.newTasks$ = this.http
-      .fetchTasks('new')
-      .pipe(map((response) => this.filterTasks(response, 'new')));
-    this.inProgressTasks$ = this.http
-      .fetchTasks('inProgress')
-      .pipe(map((response) => this.filterTasks(response, 'inProgress')));
-    this.doneTasks$ = this.http
-      .fetchTasks('done')
-      .pipe(map((response) => this.filterTasks(response, 'done')));
+    this.newTasks$ = this.taskLoader('new');
+    this.inProgressTasks$ = this.taskLoader('inProgress');
+    this.doneTasks$ = this.taskLoader('done');
     this.http.taskUpdate.subscribe((status) => {
       if (status === 'new') {
-        this.newTasks$ = this.http
-          .fetchTasks(status)
-          .pipe(map((response) => this.filterTasks(response, status)));
+        this.newTasks$ = this.taskLoader(status);
       } else if (status === 'inProgress') {
-        this.inProgressTasks$ = this.http
-          .fetchTasks(status)
-          .pipe(map((response) => this.filterTasks(response, status)));
+        this.inProgressTasks$ = this.taskLoader(status);
       } else if (status === 'done') {
-        this.doneTasks$ = this.http
-          .fetchTasks(status)
-          .pipe(map((response) => this.filterTasks(response, status)));
+        this.doneTasks$ = this.taskLoader(status);
       }
     });
   }
 
-  filterTasks(response: Object, taskType: string): Task[] {
-    return Object.entries(response).map(([key, value]) => {
-      const task = { ...value, id: key, taskType: taskType };
-      return task;
-    });
+  taskLoader(status: string) {
+    return this.http
+      .fetchTasks(status)
+      .pipe(map((response) => this.http.filterTasks(response, status)));
   }
 }
