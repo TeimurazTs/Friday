@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
 import { Task } from '../../models/task.model';
@@ -11,12 +11,21 @@ import { HttpService } from '../../services/http.service';
   templateUrl: './task.component.html',
   styleUrls: ['./task.component.css'],
 })
-export class TaskComponent {
+export class TaskComponent implements OnInit {
   constructor(private http: HttpService) {}
   @Input() task!: Task;
+  enableBtn = false;
+
+  ngOnInit() {
+    this.http.isLoading.subscribe((res) => {
+      this.enableBtn = res;
+    });
+  }
 
   onDelete(id: string, status: string) {
-    this.http.deleteTask(id, status);
+    this.http.deleteTask(id, status).subscribe(() => {
+      this.http.taskUpdate.next(status);
+    });
   }
 
   onRearrangeTask(task: Task, newStatus: string) {
