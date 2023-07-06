@@ -10,10 +10,29 @@
     </p>
   </mat-card-content>
   <mat-card-actions>
-    <button [disabled]="enableBtn" (click)="onRearrangeTask(task, 'new')">New</button>
-    <button [disabled]="enableBtn" (click)="onRearrangeTask(task, 'inProgress')">Progress</button>
-    <button [disabled]="enableBtn" (click)="onRearrangeTask(task, 'done')">Done</button>
-    <button [disabled]="enableBtn" type="button" (click)="onDelete(task.id, task.status)">
+    <button
+      [disabled]="isLoading$ | async"
+      (click)="onRearrangeTask(task, 'new')"
+    >
+      New
+    </button>
+    <button
+      [disabled]="isLoading$ | async"
+      (click)="onRearrangeTask(task, 'inProgress')"
+    >
+      Progress
+    </button>
+    <button
+      [disabled]="isLoading$ | async"
+      (click)="onRearrangeTask(task, 'done')"
+    >
+      Done
+    </button>
+    <button
+      [disabled]="isLoading$ | async"
+      type="button"
+      (click)="onDelete(task.id, task.status)"
+    >
       Delete
     </button>
   </mat-card-actions>

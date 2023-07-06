@@ -2,14 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
 import { Task } from '../models/task.model';
-import {
-  Subject,
-  concat,
-  concatMap,
-  exhaustMap,
-  mergeMap,
-  switchMap,
-} from 'rxjs';
+import { Subject, concatMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,14 +10,17 @@ import {
 export class HttpService {
   taskUpdate = new Subject<string>();
   isLoading = new Subject<boolean>();
+
   constructor(private http: HttpClient) {}
 
+  // this method is used for fetching tasks.
   fetchTasks(status: String) {
     return this.http.get<Task[]>(
       `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}.json`
     );
   }
 
+  // thsi method is used for saving a new task.
   postTask(task: Task, status: string) {
     return this.http.post<Task>(
       `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}.json`,
@@ -32,30 +28,26 @@ export class HttpService {
     );
   }
 
+  // This is a method used for deleting a task.
   deleteTask(id: string, status: string) {
     return this.http.delete(
       `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}/${id}.json`
     );
   }
 
+  //This method is responsible for moving data inbetween task colimns
   reArrangeTask(task: Task, newStatus: string) {
-    this.isLoading.next(true);
-    this.deleteTask(task.id, task.status)
-      .pipe(
-        exhaustMap((res) => {
-          return this.postTask({ ...task, status: newStatus }, newStatus);
-        })
-      )
-      .subscribe((res) => {
-        this.taskUpdate.next(task.status);
-        this.taskUpdate.next(newStatus);
-        this.isLoading.next(false);
-      });
+    return this.deleteTask(task.id, task.status).pipe(
+      concatMap(() => {
+        return this.postTask({ ...task, status: newStatus }, newStatus);
+      })
+    );
   }
 
-  filterTasks(response: Object, taskType: string): Task[] {
+  // This is a helper method used for creating an array out of object.
+  filterTasks(response: Object): Task[] {
     return Object.entries(response).map(([key, value]) => {
-      const task = { ...value, id: key, taskType: taskType };
+      const task = { ...value, id: key };
       return task;
     });
   }

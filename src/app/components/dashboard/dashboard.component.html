@@ -2,17 +2,44 @@
   <app-header></app-header>
   <app-create></app-create>
   <main>
-    <div>
+    <div
+      *ngIf="newTasks$ | async as newTasks"
+      id="new"
+      cdkDropList
+      [cdkDropListData]="newTasks"
+      [cdkDropListConnectedTo]="['inProgress', 'done']"
+      (cdkDropListDropped)="drop($event)"
+    >
       <p>New Task</p>
-      <app-task *ngFor="let task of newTasks$ | async" [task]="task"></app-task>
+      <app-task cdkDrag *ngFor="let task of newTasks" [task]="task"></app-task>
     </div>
-    <div>
+    <div
+      cdkDropList
+      [cdkDropListData]="inProgressTasks"
+      [cdkDropListConnectedTo]="['new', 'done']"
+      (cdkDropListDropped)="drop($event)"
+      id="inProgress"
+      cdkDropList
+      *ngIf="inProgressTasks$ | async as inProgressTasks"
+    >
       <p>In Progress</p>
-      <app-task *ngFor="let task of inProgressTasks$ | async" [task]="task"></app-task>
+      <app-task
+        cdkDrag
+        *ngFor="let task of inProgressTasks"
+        [task]="task"
+      ></app-task>
     </div>
-    <div>
+    <div
+      cdkDropList
+      [cdkDropListData]="doneTasks"
+      [cdkDropListConnectedTo]="['inProgress', 'new']"
+      (cdkDropListDropped)="drop($event)"
+      id="done"
+      cdkDropList
+      *ngIf="doneTasks$ | async as doneTasks"
+    >
       <p>Done</p>
-      <app-task *ngFor="let task of doneTasks$ | async" [task]="task"></app-task>
+      <app-task cdkDrag *ngFor="let task of doneTasks" [task]="task"></app-task>
     </div>
   </main>
 </div>

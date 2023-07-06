@@ -6,8 +6,8 @@ import {
   Validators,
 } from '@angular/forms';
 import { InputComponent } from 'src/app/shared/components/input/input.component';
-import { Task } from 'src/app/shared/models/task.model';
 import { HttpService } from 'src/app/shared/services/http.service';
+import { ToastService } from 'src/app/shared/services/toast.service';
 
 @Component({
   standalone: true,
@@ -17,7 +17,7 @@ import { HttpService } from 'src/app/shared/services/http.service';
   styleUrls: ['./create.component.css'],
 })
 export class CreateComponent {
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, private toastService: ToastService ) {}
 
   taskForm = new FormGroup({
     title: new FormControl('', [Validators.required]),
@@ -37,7 +37,14 @@ export class CreateComponent {
         },
         'new'
       )
-      .subscribe(() => this.http.taskUpdate.next('new'));
-    this.taskForm.reset();
+      .subscribe(
+        () => {
+          this.http.taskUpdate.next('new');
+          this.taskForm.reset();
+        },
+        (err) => {
+          this.toastService.showError('An Error Occured')
+        }
+      );
   }
 }
