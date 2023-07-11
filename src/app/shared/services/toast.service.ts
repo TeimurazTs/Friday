@@ -19,7 +19,7 @@ export class ToastService {
     this.toast.error({
       detail: 'ERROR',
       summary: information,
-      sticky: true,
+      duration: 5000,
     });
   }
 }

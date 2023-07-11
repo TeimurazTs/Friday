@@ -37,12 +37,12 @@ export class TaskComponent implements OnInit {
       return;
     }
     this.http.isLoading.next(true);
-    this.http.reArrangeTask(task, newStatus).subscribe((res) => {
+    this.http.reArrangeTask(task, newStatus).subscribe(() => {
       this.http.taskUpdate.next(task.status);
       this.http.taskUpdate.next(newStatus);
       this.http.isLoading.next(false);
       this.toastService.showSuccess(
-        `Task has been moved from ${task.status} to ${newStatus}`
+        `Moved from ${task.status} to ${newStatus}`
       );
     });
   }

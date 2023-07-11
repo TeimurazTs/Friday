@@ -65,27 +65,18 @@ export class DashboardComponent implements OnInit {
       event.previousIndex,
       event.currentIndex
     );
-    if (
-      event.container.data[event.currentIndex].status === event.container.id
-    ) {
+    const task = event.container.data[event.currentIndex];
+    const newStatus = event.container.id;
+    if (task.status === newStatus) {
       return;
     } else {
-      this.http
-        .reArrangeTask(
-          event.container.data[event.currentIndex],
-          event.container.id
-        )
-        .subscribe(() => {
-          this.http.taskUpdate.next(
-            event.container.data[event.currentIndex].status
-          );
-          this.http.taskUpdate.next(event.container.id);
-          this.toastService.showSuccess(
-            `Task has been moved from ${
-              event.container.data[event.currentIndex].status
-            } to ${event.container.id}`
-          );
-        });
+      this.http.reArrangeTask(task, newStatus).subscribe(() => {
+        this.http.taskUpdate.next(task.status);
+        this.http.taskUpdate.next(newStatus);
+        this.toastService.showSuccess(
+          `Task has been moved from ${task.status} to ${newStatus}`
+        );
+      });
     }
   }
 }

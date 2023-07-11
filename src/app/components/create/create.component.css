@@ -1,34 +1,34 @@
 form {
-    display: flex;
-    max-width: 40%;
-    align-items: center;
-    margin: 0 auto;
-    gap: 2rem;
+  display: flex;
+  max-width: 40%;
+  align-items: center;
+  margin: 0 auto;
+  gap: 2rem;
 }
 
 .inpus-div {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 .textarea-wraper {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 textarea {
-    border: none;
-    resize: none;
-    border-radius: 3px;
-    padding: 2rem;
+  border: none;
+  resize: none;
+  border-radius: 3px;
+  padding: 2rem;
 }
 
 button {
-    border: none;
-    background-color: rgb(153, 153, 233);
-    width: 4rem;
-    height: 2rem;
-    border-radius: 9px;
-    cursor: pointer;
+  border: none;
+  background-color: rgb(153, 153, 233);
+  width: 4rem;
+  height: 2rem;
+  border-radius: 9px;
+  cursor: pointer;
 }

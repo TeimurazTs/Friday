@@ -20,7 +20,7 @@ export class HttpService {
     );
   }
 
-  // thsi method is used for saving a new task.
+  // thi method is used for saving a new task.
   postTask(task: Task, status: string) {
     return this.http.post<Task>(
       `https://todoapp-24b8d-default-rtdb.europe-west1.firebasedatabase.app/task/${status}.json`,
@@ -35,7 +35,7 @@ export class HttpService {
     );
   }
 
-  //This method is responsible for moving data inbetween task colimns
+  //This method is responsible for moving data inbetween task columns
   reArrangeTask(task: Task, newStatus: string) {
     return this.deleteTask(task.id, task.status).pipe(
       concatMap(() => {

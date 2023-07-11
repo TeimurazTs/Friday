@@ -14,13 +14,12 @@
       <app-task cdkDrag *ngFor="let task of newTasks" [task]="task"></app-task>
     </div>
     <div
+      *ngIf="inProgressTasks$ | async as inProgressTasks"
       cdkDropList
       [cdkDropListData]="inProgressTasks"
       [cdkDropListConnectedTo]="['new', 'done']"
       (cdkDropListDropped)="drop($event)"
       id="inProgress"
-      cdkDropList
-      *ngIf="inProgressTasks$ | async as inProgressTasks"
     >
       <p>In Progress</p>
       <app-task
@@ -30,13 +29,12 @@
       ></app-task>
     </div>
     <div
+      *ngIf="doneTasks$ | async as doneTasks"
       cdkDropList
       [cdkDropListData]="doneTasks"
       [cdkDropListConnectedTo]="['inProgress', 'new']"
       (cdkDropListDropped)="drop($event)"
       id="done"
-      cdkDropList
-      *ngIf="doneTasks$ | async as doneTasks"
     >
       <p>Done</p>
       <app-task cdkDrag *ngFor="let task of doneTasks" [task]="task"></app-task>
