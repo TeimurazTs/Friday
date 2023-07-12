@@ -7,7 +7,7 @@ interface BroadcastMessage {
   payload: boolean;
 }
 
-export function runInZone<T>(zone: NgZone): OperatorFunction<T, T> {
+function runInZone<T>(zone: NgZone): OperatorFunction<T, T> {
   return (source) => {
     return new Observable((observer) => {
       const onNext = (value: T) => zone.run(() => observer.next(value));
@@ -32,7 +32,6 @@ export class BroadcastChannelService {
   }
 
   publish(message: BroadcastMessage): void {
-    console.log(message);
     this.broadcastChannel.postMessage(message);
   }
 
