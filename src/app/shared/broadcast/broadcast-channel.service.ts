@@ -43,12 +43,8 @@ export class BroadcastChannelService {
   }
 }
 
-export const BChannel = new InjectionToken<BroadcastChannelService>(
-  'BroadCastService',
-  {
-    factory: () => {
-      const ngZone = new NgZone({});
-      return new BroadcastChannelService('BChannel', ngZone);
-    },
-  }
-);
+export const BChannel = new InjectionToken<BroadcastChannelService>('', {
+  factory: () => {
+    return new BroadcastChannelService('BChannel', new NgZone({}));
+  },
+});
