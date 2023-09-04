@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { TaskComponent } from 'src/app/shared/components/task/task.component';
 import { Task } from 'src/app/shared/models/task.model';
@@ -14,6 +14,10 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { ToastService } from 'src/app/shared/services/toast.service';
+import {
+  BChannel,
+  BroadcastChannelService,
+} from 'src/app/shared/broadcast/broadcast-channel.service';
 
 @Component({
   standalone: true,
@@ -34,7 +38,11 @@ export class DashboardComponent implements OnInit {
   inProgressTasks$!: Observable<Task[]>;
   doneTasks$!: Observable<Task[]>;
 
-  constructor(private http: HttpService, private toastService: ToastService) {}
+  constructor(
+    private http: HttpService,
+    private toastService: ToastService,
+    @Inject(BChannel) private broadcastChannelName: BroadcastChannelService
+  ) {}
 
   ngOnInit(): void {
     this.newTasks$ = this.taskLoader('new');
@@ -49,6 +57,11 @@ export class DashboardComponent implements OnInit {
       } else if (status === 'done') {
         this.doneTasks$ = this.taskLoader(status);
       }
+    });
+
+    this.broadcastChannelName.messagesOfType('drop').subscribe((data) => {
+      this.http.taskUpdate.next(data.payload);
+      this.toastService.showSuccess(data.message);
     });
   }
 
@@ -74,9 +87,23 @@ export class DashboardComponent implements OnInit {
         this.http.taskUpdate.next(task.status);
         this.http.taskUpdate.next(newStatus);
         this.toastService.showSuccess(
-          `Task has been moved from ${task.status} to ${newStatus}`
+          `Moved from ${task.status} to ${newStatus}`
         );
+        this.broadcastChannelName.publish({
+          type: 'drop',
+          payload: task.status,
+          message: '',
+        });
+        this.broadcastChannelName.publish({
+          type: 'drop',
+          payload: newStatus,
+          message: `Moved from ${task.status} to ${newStatus}`,
+        });
       });
     }
+  }
+
+  trackByFunction(index: number, task: Task): string {
+    return task.id;
   }
 }

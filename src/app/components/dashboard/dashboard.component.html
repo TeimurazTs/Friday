@@ -11,7 +11,11 @@
       (cdkDropListDropped)="drop($event)"
     >
       <p>New Task</p>
-      <app-task cdkDrag *ngFor="let task of newTasks" [task]="task"></app-task>
+      <app-task
+        cdkDrag
+        *ngFor="let task of newTasks; trackBy: trackByFunction"
+        [task]="task"
+      ></app-task>
     </div>
     <div
       *ngIf="inProgressTasks$ | async as inProgressTasks"
@@ -24,7 +28,7 @@
       <p>In Progress</p>
       <app-task
         cdkDrag
-        *ngFor="let task of inProgressTasks"
+        *ngFor="let task of inProgressTasks; trackBy: trackByFunction"
         [task]="task"
       ></app-task>
     </div>
@@ -37,7 +41,11 @@
       id="done"
     >
       <p>Done</p>
-      <app-task cdkDrag *ngFor="let task of doneTasks" [task]="task"></app-task>
+      <app-task
+        cdkDrag
+        *ngFor="let task of doneTasks; trackBy: trackByFunction"
+        [task]="task"
+      ></app-task>
     </div>
   </main>
 </div>

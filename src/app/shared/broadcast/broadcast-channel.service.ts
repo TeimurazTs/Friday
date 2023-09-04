@@ -4,7 +4,8 @@ import { filter } from 'rxjs/operators';
 
 interface BroadcastMessage {
   type: string;
-  payload: boolean;
+  payload: string;
+  message: string;
 }
 
 function runInZone<T>(zone: NgZone): OperatorFunction<T, T> {
@@ -27,8 +28,9 @@ export class BroadcastChannelService {
 
   constructor(@Inject('s') name: string, private ngZone: NgZone) {
     this.broadcastChannel = new BroadcastChannel(name);
-    this.broadcastChannel.onmessage = (message) =>
+    this.broadcastChannel.onmessage = (message) => {
       this.onMessage.next(message.data);
+    };
   }
 
   publish(message: BroadcastMessage): void {

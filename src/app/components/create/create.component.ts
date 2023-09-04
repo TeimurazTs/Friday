@@ -36,8 +36,9 @@ export class CreateComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    this.broadcastChannelName.messagesOfType('name').subscribe(() => {
-      this.http.taskUpdate.next('new');
+    this.broadcastChannelName.messagesOfType('add').subscribe((data) => {
+      this.http.taskUpdate.next(data.payload);
+      this.toastService.showSuccess(data.message);
     });
   }
 
@@ -61,7 +62,12 @@ export class CreateComponent implements OnInit {
       .subscribe(() => {
         this.http.taskUpdate.next('new');
         this.taskForm.reset();
-        this.broadcastChannelName.publish({ type: 'name', payload: true });
+        this.toastService.showSuccess('Task has been added');
+        this.broadcastChannelName.publish({
+          type: 'add',
+          payload: 'new',
+          message: 'Task has been added',
+        });
       });
   }
 }

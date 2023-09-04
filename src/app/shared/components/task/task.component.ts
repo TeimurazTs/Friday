@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 
 import { MatCardModule } from '@angular/material/card';
 import { Task } from '../../models/task.model';
@@ -6,6 +6,10 @@ import { HttpService } from '../../services/http.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../services/toast.service';
+import {
+  BChannel,
+  BroadcastChannelService,
+} from '../../broadcast/broadcast-channel.service';
 
 @Component({
   standalone: true,
@@ -15,12 +19,26 @@ import { ToastService } from '../../services/toast.service';
   styleUrls: ['./task.component.css'],
 })
 export class TaskComponent implements OnInit {
-  constructor(private http: HttpService, private toastService: ToastService) {}
+  constructor(
+    private http: HttpService,
+    private toastService: ToastService,
+    @Inject(BChannel) private broadcastChannelName: BroadcastChannelService
+  ) {}
   @Input() task!: Task;
   isLoading$!: Observable<boolean>;
 
   ngOnInit() {
     this.isLoading$ = this.http.isLoading;
+    this.broadcastChannelName.messagesOfType('delete').subscribe((data) => {
+      this.http.taskUpdate.next(data.payload);
+      this.toastService.showSuccess(data.message);
+    });
+    this.broadcastChannelName.messagesOfType('reArrange').subscribe((data) => {
+      this.http.taskUpdate.next(data.payload);
+      this.toastService.showSuccess(data.message);
+    });
+
+    console.log(5);
   }
 
   onDelete(id: string, status: string) {
@@ -29,6 +47,11 @@ export class TaskComponent implements OnInit {
       this.http.taskUpdate.next(status);
       this.http.isLoading.next(false);
       this.toastService.showSuccess('Task has been deleted');
+      this.broadcastChannelName.publish({
+        type: 'delete',
+        payload: status,
+        message: 'Task has been deleted',
+      });
     });
   }
 
@@ -44,6 +67,16 @@ export class TaskComponent implements OnInit {
       this.toastService.showSuccess(
         `Moved from ${task.status} to ${newStatus}`
       );
+      this.broadcastChannelName.publish({
+        type: 'reArrange',
+        payload: task.status,
+        message: '',
+      });
+      this.broadcastChannelName.publish({
+        type: 'reArrange',
+        payload: newStatus,
+        message: `Moved from ${task.status} tp ${newStatus}`,
+      });
     });
   }
 }
